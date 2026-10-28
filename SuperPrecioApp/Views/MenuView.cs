@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SuperPrecioApp.Views
 {
-    internal class Menu
+    internal class MenuView
     {
     }
 }
