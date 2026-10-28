@@ -100,24 +100,21 @@ Resuelve los conflictos, si aparecen, y continúa trabajando.
 
 ### Arquitectura
 
+```text
 SuperPrecioApp/
-├─superPrecioApp.cs
-├── Models            /
+├── superPrecioApp.cs
+├── Models/
 │   ├── Producto.cs
-│   └ Usuario.cs
+│   └── Usuario.cs
 ├── Views/
-│   ├── MenuView.cs
-│
+│   └── MenuView.cs
 ├── Controllers/
-│   ├── ProductoController.cs
-│  
+│   └── ProductoController.cs
 ├── Services/
 │   └── ApiExternaService.cs
 ├── Data/
 │   ├── DatabaseConnection.cs
 │   └── ProductoRepository.cs
-
-│ 
 ├── appsettings.json
 ├── .gitignore
 └── README.md
