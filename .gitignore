@@ -54,3 +54,19 @@ Thumbs.db
 # Publicación generada
 publish/
 
+# Archivos adicionales de Visual Studio y paquetes
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Paquetes NuGet restaurados por Visual Studio
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Pruebas de rendimiento / cobertura de código en Visual Studio
+*.coverage
+*.coveragexml
+TestResults/
