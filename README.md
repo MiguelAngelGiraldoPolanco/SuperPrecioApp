@@ -118,6 +118,8 @@ SuperPrecioApp/
 ├── appsettings.json
 ├── .gitignore
 └── README.md
+```
+
 
 ###Explicacion de la Arquitectura 
 
