@@ -98,3 +98,40 @@ Resuelve los conflictos, si aparecen, y continúa trabajando.
 - Crear un Pull Request para integrar los cambios en `main`.
 - Revisar y probar el código antes de fusionarlo.
 
+### Arquitectura
+
+SuperPrecioApp/
+├─superPrecioApp.cs
+├── Models            /
+│   ├── Producto.cs
+│   └ Usuario.cs
+├── Views/
+│   ├── MenuView.cs
+│
+├── Controllers/
+│   ├── ProductoController.cs
+│  
+├── Services/
+│   └── ApiExternaService.cs
+├── Data/
+│   ├── DatabaseConnection.cs
+│   └── ProductoRepository.cs
+
+│ 
+├── appsettings.json
+├── .gitignore
+└── README.md
+
+### Explicacion de la Arquitectura 
+
+Models/: clases que representan los datos que maneja la aplicación.
+
+Views/: menús, entrada del usuario y presentación de resultados por consola.
+
+Controllers/: coordinan las acciones del usuario y las operaciones.
+
+Services/: contiene ApiExternaService, que realiza las peticiones HTTP a la API de terceros.
+
+Data/: gestiona SQLite, las conexiones y las consultas.
+
+DTOs/: representa los datos recibidos de la API externa cuando su estructura difiere de vuestros modelos.
