@@ -119,7 +119,7 @@ SuperPrecioApp/
 ├── .gitignore
 └── README.md
 
-### Explicacion de la Arquitectura 
+###Explicacion de la Arquitectura 
 
 Models/: clases que representan los datos que maneja la aplicación.
 
