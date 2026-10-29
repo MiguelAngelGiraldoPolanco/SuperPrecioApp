@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SuperPrecioApp.DTO;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SuperPrecioApp.Services
 {
     // Clase que se utiliza para obtener los datos de precios de productos y supermercados desde una api.
-    internal class CallApi
+    internal static class CallApi
     {
         // Instanciamos a la calse HttpClient y se le añade la url de la api que vamos a llamar.
         private static HttpClient sharedClient = new()
@@ -16,15 +17,19 @@ namespace SuperPrecioApp.Services
             BaseAddress = new Uri("https://tutandem.es"),
         };
 
-        static async Task GetAsync(HttpClient httpClient)
+        internal static async Task GetAsync()
         {
-            using HttpResponseMessage response = await httpClient.GetAsync("datos/cesta-diaria.csv");
+            Console.WriteLine("Ejecutandose. Espere unos segundos ....");
+            using HttpResponseMessage response = await sharedClient.GetAsync("datos/cesta-diaria.csv");
+            Console.WriteLine("Se completo con exito");
 
-            response.EnsureSuccessStatusCode();
-                
+            response.EnsureSuccessStatusCode().WriteRequestToConsole(); ;
+
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"{jsonResponse}\n");
         }
+
+        
     }
 }
