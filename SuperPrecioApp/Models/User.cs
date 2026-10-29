@@ -4,7 +4,5 @@ using System.Text;
 
 namespace SuperPrecioApp.Models
 {
-    internal class User
-    {
-    }
+    internal record User(int Id, string Name, string Email, string HashPassword);
 }
