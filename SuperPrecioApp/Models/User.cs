@@ -4,5 +4,14 @@ using System.Text;
 
 namespace SuperPrecioApp.Models
 {
-    internal record User(int Id, string Name, string Email, string HashPassword);
+    internal class User
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
+        public string HashPassword { get; set; } = string.Empty;
+    }
 }

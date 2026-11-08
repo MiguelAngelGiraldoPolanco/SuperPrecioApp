@@ -4,5 +4,12 @@ using System.Text;
 
 namespace SuperPrecioApp.Models
 {
-    internal record SuperMarket(int Id, string Name, string Url);
+    internal class SuperMarket
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public string Url { get; set; } = string.Empty;
+    }
 }
