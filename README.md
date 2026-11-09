@@ -7,6 +7,7 @@ Descarga el repositorio a tu ordenador:
 ```bash
 git clone https://github.com/MiguelAngelGiraldoPolanco/SuperPrecioApp.git
 cd SuperPrecioApp
+Una vez creado el repositorio, dentro de la carpeta del Proyecto (donde está SuperPrecioApp.csproj) lanzar el comando dotnet run.
 ```
 
 ### 2. Descargar los últimos cambios
