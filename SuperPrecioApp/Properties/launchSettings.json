@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SuperPrecioApp": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}
