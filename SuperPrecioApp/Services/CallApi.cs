@@ -1,4 +1,4 @@
-﻿using SuperPrecioApp.DTO;
+﻿//using SuperPrecioApp.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +23,7 @@ namespace SuperPrecioApp.Services
             using HttpResponseMessage response = await sharedClient.GetAsync("datos/cesta-diaria.csv");
             Console.WriteLine("Se completo con exito");
 
-            response.EnsureSuccessStatusCode().WriteRequestToConsole(); ;
+            //response.EnsureSuccessStatusCode().WriteRequestToConsole(); ;
 
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
