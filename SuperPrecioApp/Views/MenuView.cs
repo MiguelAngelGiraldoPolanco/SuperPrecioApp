@@ -6,7 +6,7 @@ using System.Text;
 namespace SuperPrecioApp.Views
 {
     internal class MenuView
-    {
+    {/*
         public void ShowMenu() {
             string? option;
 
@@ -30,6 +30,6 @@ namespace SuperPrecioApp.Views
 
         public static void CreateTxtBestPrices() {
             TxtBestPrices.CreateBuyList();
-        }
-    }
+        }*/
+    } 
 }

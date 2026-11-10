@@ -2,44 +2,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SuperPrecioApp.Data {
     internal static class DatabaseInitializer {
-        // Decide al arrancar si reinicia o inicializa la base de datos.
-        public static async Task RunStartupAsync(string[] args) {
-            if (args.Contains("--reset-database", StringComparer.OrdinalIgnoreCase)) {
-                Console.WriteLine("¡ATENCIÓN! Se eliminarán todos los datos.");
-                Console.Write("¿Quieres continuar? (S/N): ");
-
-                string? confirmation = Console.ReadLine();
-
-                if (string.Equals(confirmation, "S", StringComparison.OrdinalIgnoreCase)) {
-                    await ResetAsync();
-
-                    Console.WriteLine("Base de datos reiniciada correctamente.");
-                }
-                else {
-                    Console.WriteLine("Operación cancelada.");
-                }
-            }
-            else {
-                await InitializeAsync();
-
-                Console.WriteLine("Base de datos inicializada correctamente.");
-            }
-        }
-
-        // Inicialización normal: crea o actualiza la base de datos.
         public static async Task InitializeAsync() {
             using var db = new AppDbContext();
 
+            // 1. Obtener la ruta del archivo de la base de datos desde la conexión de EF Core
+            var connectionString = db.Database.GetConnectionString();
+            
+            // extraemos la ruta del archivo y aseguramos que el directorio exista si es SQLite
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                var builder = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder(connectionString);
+                if (!string.IsNullOrEmpty(builder.DataSource))
+                {
+                    var dbPath = Path.GetFullPath(builder.DataSource);
+                    var directory = Path.GetDirectoryName(dbPath);
+
+                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                        Console.WriteLine($"Directorio de base de datos creado: {directory}");
+                    }
+                }
+            }
+
+            // 2. Aplicar migraciones normalmente (crea la BD si no existe)
             await db.Database.MigrateAsync();
-        }
-
-        // Reinicio explícito: elimina y vuelve a crear la base de datos.
-        public static async Task ResetAsync() {
-            using var db = new AppDbContext();
-
-            await db.Database.EnsureDeletedAsync();
-
-            await db.Database.MigrateAsync();
+            Console.WriteLine("Base de datos inicializada correctamente.");
         }
     }
 }

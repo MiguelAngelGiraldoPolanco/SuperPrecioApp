@@ -5,30 +5,38 @@ namespace SuperPrecioApp.Data
 {
     internal class AppDbContext : DbContext
     {
-        public DbSet<Product> Products { get; set; }
-        public DbSet<SuperMarket> SuperMarkets { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Price> Prices { get; set; }
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<Supermarket> Supermarkets => Set<Supermarket>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<HistoricalPrice> HistoricalPrices => Set<HistoricalPrice>();
 
-        protected override void OnConfiguring(
-            DbContextOptionsBuilder optionsBuilder)
+        // --- CONSTRUCTOR 1: Vacío (Permite hacer "new AppDbContext()") ---
+        public AppDbContext()
         {
-            string databasePath = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "Data",
-                "SuperPrecio.db"
-            );
+        }
 
-            optionsBuilder.UseSqlite($"Data Source={databasePath}");
+        // --- CONSTRUCTOR 2: Con opciones (Permite inyección de dependencias si algún día lo usas) ---
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Detecta automáticamente si está en Docker (/app/data) o en local
+            var dbPath = Directory.Exists("/app/data") 
+                ? Path.Combine("/app/data", "superprecio.db") 
+                : Path.Combine(Directory.GetCurrentDirectory(), "superprecio.db");
+
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Price>()
+            // ¡Clave! Evita duplicados exactos para el mismo producto, supermercado y fecha
+            modelBuilder.Entity<HistoricalPrice>()
                 .HasIndex(p => new
                 {
                     p.ProductId,
-                    p.SuperMarketId,
+                    p.SupermarketId,
                     p.Date
                 })
                 .IsUnique();
