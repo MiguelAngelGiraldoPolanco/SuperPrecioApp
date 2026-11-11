@@ -15,15 +15,11 @@ namespace SuperPrecioApp.Data
         {
         }
 
-        // --- CONSTRUCTOR 2: Con opciones (Permite inyección de dependencias si algún día lo usas) ---
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Detecta automáticamente si está en Docker (/app/data) o en local
-            var dbPath = Directory.Exists("/app/data") 
-                ? Path.Combine("/app/data", "superprecio.db") 
+            var dbPath = Directory.Exists("/app/data")
+                ? Path.Combine("/app/data", "superprecio.db")
                 : Path.Combine(Directory.GetCurrentDirectory(), "superprecio.db");
 
             optionsBuilder.UseSqlite($"Data Source={dbPath}");

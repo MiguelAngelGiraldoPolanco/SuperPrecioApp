@@ -16,4 +16,21 @@ var importService = new ApiImportService(context);
 // Llamamos a la API y guardamos
 await importService.ImportarDatosCsvAsync();
 */
+// EJEMPLO PARA LLAMAR A LOS METODOS Y PODER HACER LAS CONSULTAS
+// PRIMERO: tenemos que darle contexto para que sepa donde esta la base de datos que va a consultar
+using var context = new AppDbContext();
+
+// SEGUNDO: se crea un objeto del servicio y se le pasa el contexto
+var servicio = new ProductService(context);
+
+// TERCERO: se guarda el resultado de la consulta en una variable  para poder oterar mostrar o lo que quieras
+var producto = await servicio.ObtenerTodosAsync();
+
+foreach (var producto in productos)
+{
+    Console.WriteLine($"{producto.Id} - {producto.Name}");
+}
+
+
+
 Console.WriteLine("¡Proceso finalizado con éxito!");
