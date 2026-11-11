@@ -70,3 +70,7 @@ packages/
 *.coverage
 *.coveragexml
 TestResults/
+
+
+# Txts que se crean con el uso normal del proyecto
+lista_compra.txt
