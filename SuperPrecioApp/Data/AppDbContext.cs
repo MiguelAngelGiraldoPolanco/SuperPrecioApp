@@ -20,7 +20,11 @@ namespace SuperPrecioApp.Data
             // Detecta automáticamente si está en Docker (/app/data) o en local
             var dbPath = Directory.Exists("/app/data")
                 ? Path.Combine("/app/data", "superprecio.db")
-                : Path.Combine(Directory.GetCurrentDirectory(), "superprecio.db");
+                //: Path.Combine(Directory.GetCurrentDirectory(), "superprecio.db");
+                : Path.GetFullPath(
+                    Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "..", "data", "superprecio.db"));
 
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
