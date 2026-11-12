@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  superprecio-app:
+    build: .
+    container_name: superprecio_contenedor
+    stdin_open: true
+    tty: true
+    volumes:
+      # Mantiene tu base de datos SQLite guardada en tu PC aunque apagues el contenedor
+      - ./data:/app/data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    restart: unless-stopped
