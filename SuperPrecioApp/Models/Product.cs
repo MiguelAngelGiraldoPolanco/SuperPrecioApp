@@ -4,16 +4,15 @@ using System.Text;
 
 namespace SuperPrecioApp.Models
 {
-    internal class Product
+    internal record Product
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
+        public string Slug { get; init; } = string.Empty;           // Ej: aceite-oliva-virgen-extra
+        public string Name { get; init; } = string.Empty;           // Ej: Aceite de oliva virgen extra
+        public string Group { get; init; } = string.Empty;            // Ej: básicos
+        public string Unit { get; init; } = string.Empty;            // Ej: L, kg
 
-        public string ProductCode { get; set; } = string.Empty;
-
-        public string Name { get; set; } = string.Empty;
-
-        public string Group { get; set; } = string.Empty;
-
-        public string Unit { get; set; } = string.Empty;
+        // Lista / Array con todos los precios que ha tenido este producto a lo largo del tiempo
+        public ICollection<HistoricalPrice> HistoricalPrices { get; init; } = [];
     }
 }

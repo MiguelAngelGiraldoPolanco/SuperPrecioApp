@@ -17,32 +17,32 @@ namespace SuperPrecioApp.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.14");
 
-            modelBuilder.Entity("SuperPrecioApp.Models.Price", b =>
+            modelBuilder.Entity("SuperPrecioApp.Models.HistoricalPrice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly>("Date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("PricePerUnit")
+                    b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SuperMarketId")
+                    b.Property<int>("SupermarketId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SuperMarketId");
+                    b.HasIndex("SupermarketId");
 
-                    b.HasIndex("ProductId", "SuperMarketId", "Date")
+                    b.HasIndex("ProductId", "SupermarketId", "Date")
                         .IsUnique();
 
-                    b.ToTable("Prices");
+                    b.ToTable("HistoricalPrices");
                 });
 
             modelBuilder.Entity("SuperPrecioApp.Models.Product", b =>
@@ -59,7 +59,7 @@ namespace SuperPrecioApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ProductCode")
+                    b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -72,7 +72,7 @@ namespace SuperPrecioApp.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("SuperPrecioApp.Models.SuperMarket", b =>
+            modelBuilder.Entity("SuperPrecioApp.Models.Supermarket", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,13 +82,9 @@ namespace SuperPrecioApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.ToTable("SuperMarkets");
+                    b.ToTable("Supermarkets");
                 });
 
             modelBuilder.Entity("SuperPrecioApp.Models.User", b =>
@@ -114,23 +110,33 @@ namespace SuperPrecioApp.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SuperPrecioApp.Models.Price", b =>
+            modelBuilder.Entity("SuperPrecioApp.Models.HistoricalPrice", b =>
                 {
                     b.HasOne("SuperPrecioApp.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("HistoricalPrices")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SuperPrecioApp.Models.SuperMarket", "SuperMarket")
-                        .WithMany()
-                        .HasForeignKey("SuperMarketId")
+                    b.HasOne("SuperPrecioApp.Models.Supermarket", "Supermarket")
+                        .WithMany("HistoricalPrices")
+                        .HasForeignKey("SupermarketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("SuperMarket");
+                    b.Navigation("Supermarket");
+                });
+
+            modelBuilder.Entity("SuperPrecioApp.Models.Product", b =>
+                {
+                    b.Navigation("HistoricalPrices");
+                });
+
+            modelBuilder.Entity("SuperPrecioApp.Models.Supermarket", b =>
+                {
+                    b.Navigation("HistoricalPrices");
                 });
 #pragma warning restore 612, 618
         }
