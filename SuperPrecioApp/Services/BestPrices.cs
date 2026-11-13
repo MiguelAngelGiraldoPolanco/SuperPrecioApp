@@ -18,9 +18,18 @@ namespace SuperPrecioApp.Services {
                 // se lee el nombre del producto que el usuario ha escrito
                 productName = Console.ReadLine();
 
+                if (productName == "") {
+                    Console.WriteLine("Escriba el nombre del producto.");
+                }
+
                 // en caso de que no escriba nada o escriba salir
-                if (productName is null || productName.ToLower() == "salir") {
+                if (productName is null || productName.Trim().ToLower() == "salir") {
                     break;
+                }
+
+                // si escribe en blanco (o solo espacios), no hace nada y vuelve a pedir
+                if (string.IsNullOrWhiteSpace(productName)) {
+                    continue;
                 }
 
                 //se mete en el arraylist el producto
