@@ -5,65 +5,34 @@ using SuperPrecioApp.Models;
 
 namespace SuperPrecioApp.Services {
     internal class BestPrices {
+        private const string PATH_TXT = "lista_compra.txt";
 
-        // funcion para crear la lista de la compra
-        internal static void CreateBuyList() {
-            // en este array meteremos los productos que el usuario vaya introduciendo
-            List<HistoricalPrice> prices = new();
-            Console.WriteLine("Escribe el nombre EXACTO del producto que quieras. Escribe salir para finalizar tu lista de la compra.");
-            String? productName = "";
-
-            // se leen nombres de productos hasta que el usuario escriba "salir"
-            do {
-                // se lee el nombre del producto que el usuario ha escrito
-                productName = Console.ReadLine();
-
-                if (productName == "") {
-                    Console.WriteLine("Escriba el nombre del producto.");
-                }
-
-                // en caso de que no escriba nada o escriba salir
-                if (productName is null || productName.Trim().ToLower() == "salir") {
-                    break;
-                }
-
-                // si escribe en blanco (o solo espacios), no hace nada y vuelve a pedir
-                if (string.IsNullOrWhiteSpace(productName)) {
-                    continue;
-                }
-
-                //se mete en el arraylist el producto
-                HistoricalPrice? productSearch = GetBestPrice(productName);
-
-                if (productSearch is null) {
-                    Console.WriteLine("Producto no encontrado.");
-                }
-                else {
-
-                    prices.AddRange(productSearch);
-
-                    for (int i = 0; i < prices.Count; i++) {
-                        Console.WriteLine($"Producto {i + 1}: {prices[i].Product.Name} - {prices[i].Price} - {prices[i].Supermarket.Name}");
-                    }
-
-                    Console.WriteLine("Producto agregado. Escribe otro producto o 'salir' para finalizar.");
-                }
-            } while (productName?.ToLower() != "salir");
-
-            WriteTxt(prices);
+        internal static string getPathTxt() {
+            return PATH_TXT;
         }
 
 
-        // funcion para todos los productos
-        internal static void ShowProductsList() {
-            List<HistoricalPrice> productSearch = CrearProductos("");
+        // funcion para crear la lista de la compra
+        internal static void InsertIntoTxt(String productInfo) {
+            string ruta = Path.Combine(Directory.GetCurrentDirectory(), PATH_TXT);
+            File.AppendAllLines(ruta, new[] { productInfo });   // AppendAllLines pone el salto de línea
+        }
+
+        // funcion para ver todos los productos por supermercado
+        internal static List<HistoricalPrice> GetLowestPrices() {
+            // se meten todos los productos que existen en la bbdd
+            List<HistoricalPrice> productSearch = CreateProducts("");
             List<HistoricalPrice> lowestPrices = new();
             List<HistoricalPrice> toSuperMarket = new();
 
+            // se reccorre el arraylist
             for (int i = 0; i < productSearch.Count; i++) {
+                // metemos el primero en el arraylist, ya que de momento es el mas barato
                 HistoricalPrice actual = productSearch[i];
-
                 int posicion = -1;
+
+                // se compara con el siguiente, ademmas con el if sabe si ya existe en el arraylist o no, y si existe, se compara el precio
+                // es importante el id ya que el nombre puede ser igual, pero el id es unico
                 for (int j = 0; j < lowestPrices.Count; j++) {
                     if (lowestPrices[j].Product.Id == actual.Product.Id) {
                         posicion = j;
@@ -78,61 +47,17 @@ namespace SuperPrecioApp.Services {
                 }
             }
 
+            // si es el producto mas barato, se mete en el arraylist de los productos mas baratos
             for (int i = 0; i < lowestPrices.Count; i++) {
                 toSuperMarket.Add(lowestPrices[i]);
             }
 
-            showBySuperMarket(toSuperMarket);
+            return toSuperMarket;
         }
-
-
-        internal static void showBySuperMarket(List<HistoricalPrice> prices) {
-            // ordenamos el arraylist por supermercado
-            for (int i = 0; i < prices.Count - 1; i++) {
-                for (int j = 0; j < prices.Count - 1 - i; j++) {
-                    if (string.Compare(prices[j].Supermarket.Name, prices[j + 1].Supermarket.Name) > 0) {
-                        HistoricalPrice aux = prices[j];
-                        prices[j] = prices[j + 1];
-                        prices[j + 1] = aux;
-                    }
-                }
-            }
-
-            String supermarketName = prices[0].Supermarket.Name;
-
-            for (int i = 0; i < prices.Count ; i++) {
-                if (i == 0 || prices[i].Supermarket.Name != prices[i - 1].Supermarket.Name) {
-                    Console.WriteLine("--------------------");
-                    Console.WriteLine(prices[i].Supermarket.Name.ToUpper());
-                    Console.WriteLine("--------------------");
-                }
-
-                Console.WriteLine($"{i + 1} - {prices[i].Product.Name} - {prices[i].Price}");
-
-            }
-
-
-        }
-
-        // funcion para escribir en el txt
-        internal static void WriteTxt(List<HistoricalPrice> product) {
-            // creacion del txt para la lista de la compra
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "lista_compra.txt");
-
-            using (StreamWriter writer = new StreamWriter(filePath)) {
-                for (int i = 0; i < product.Count; i++) {
-                    writer.WriteLine($"{product[i].Product.Name} - {product[i].Price} - {product[i].Supermarket.Name}");
-                }
-            }
-
-            Console.WriteLine($"Archivo creado en: {filePath}");
-
-        }
-
 
         // consigue el producto de menor precio 
-        internal static HistoricalPrice? GetBestPrice(String ProductName) {
-            List<HistoricalPrice> prices = CrearProductos(ProductName);
+        public static HistoricalPrice? GetBestPrice(String ProductName) {
+            List<HistoricalPrice> prices = CreateProducts(ProductName);
 
             if (prices.Count == 0) {
                 return null;
@@ -153,8 +78,7 @@ namespace SuperPrecioApp.Services {
 
         // De momento, para probar, pilla los productos desde el txt
         // Cuando la BBDD este lista se cambia a la consulta 
-
-        internal static List<HistoricalPrice> CrearProductos(string? nombreProducto = null) {
+        private static List<HistoricalPrice> CreateProducts(string? nombreProducto = null) {
             nombreProducto = string.IsNullOrWhiteSpace(nombreProducto) ? null : nombreProducto.Trim();
 
             using var context = new AppDbContext();
@@ -174,6 +98,10 @@ namespace SuperPrecioApp.Services {
 
             return consulta.ToList();
         }
+
+
+        
+
 
     }
 }
