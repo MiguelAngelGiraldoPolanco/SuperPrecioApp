@@ -5,6 +5,7 @@ using SuperPrecioApp.Data;
 namespace SuperPrecioApp.Services
 {
 
+    //clase que llevas las consultas con metodos empleados para hacer las consultas a la base de datos usando linq 
     internal class SupermarketService
     {
 

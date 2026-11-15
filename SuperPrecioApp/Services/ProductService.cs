@@ -5,12 +5,18 @@ using SuperPrecioApp.Data;
 
 namespace SuperPrecioApp.Services
 {
+    //clase que llevas las consultas con metodos empleados para hacer las consultas a la base de datos usando linq 
     internal class ProductService
     {
         private readonly AppDbContext _context;
-
-        public ProductService(AppDbContext context) => _context = context;
-
+        private readonly SupermarketService _supermarketService;
+        private readonly HistoricalPriceService _historicalPriceService;
+        public ProductService(AppDbContext context)
+        {
+            _context = context;
+            _supermarketService = new SupermarketService(context);
+            _historicalPriceService = new HistoricalPriceService(context);
+        }
         public async Task<List<Product>> ObtenerTodosAsync()
         {
             var consulta =
@@ -64,5 +70,7 @@ namespace SuperPrecioApp.Services
 
             return consulta;
         }
+
+
     }
 }

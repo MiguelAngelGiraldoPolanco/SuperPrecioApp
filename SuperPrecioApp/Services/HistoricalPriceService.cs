@@ -5,6 +5,7 @@ using SuperPrecioApp.Data;
 namespace SuperPrecioApp.Services
 {
 
+    //clase que llevas las consultas con metodos empleados para hacer las consultas a la base de datos usando linq 
     internal class HistoricalPriceService
     {
 
@@ -14,13 +15,17 @@ namespace SuperPrecioApp.Services
 
         public async Task<List<HistoricalPrice>> ObtenerHistorialDePreciosPorProductoAsync(int idProducto)
         {
-            var consulta =
-            from historicalPrices in _context.HistoricalPrices
-            where historicalPrices.ProductId == idProducto
-            orderby historicalPrices.Date descending
-            select historicalPrices;
+            var historial = await (
+            from price in _context.HistoricalPrices
+            where price.ProductId == idProducto
+            orderby price.Date descending
+            select price
+        ).ToListAsync();
 
-            return await consulta.ToListAsync();
+            return historial
+                .GroupBy(p => p.SupermarketId)
+                .Select(g => g.First())
+                .ToList();
         }
 
         public async Task<List<HistoricalPrice>> ObtenerHistorialDePreciosPorSupermercadoAsync(int idSupermercado)
