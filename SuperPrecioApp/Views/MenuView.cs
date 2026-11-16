@@ -1,12 +1,12 @@
-﻿using SuperPrecioApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+using SuperPrecioApp.Services;
+using SuperPrecioApp.Data;
 
 namespace SuperPrecioApp.Views
 {
     internal class MenuView
     {
+<<<<<<< HEAD
         public void ShowMenu() {
 
             Console.WriteLine("Bienvenido a SuperPrecioApp");
@@ -19,9 +19,20 @@ namespace SuperPrecioApp.Views
                 Console.WriteLine("2. Ver todos los productos");
                 Console.WriteLine("0. Salir del programa");
                 Console.WriteLine("----------------------------------------");
+=======
+        public MenuView() { }
 
-                option = Console.ReadLine();
+        // Método para leer números enteros sin provocar excepciones
+        private static int LeerEntero(string mensaje)
+        {
+            int numero;
+>>>>>>> origin/main
 
+            while (true)
+            {
+                Console.WriteLine(mensaje);
+
+<<<<<<< HEAD
                 if (option == "1") {
                     CreateTxtBestPrices();
                 }
@@ -32,17 +43,215 @@ namespace SuperPrecioApp.Views
 
                 else if (option != "0" && option is not null) {
                     Console.WriteLine("Opción no válida.");
+=======
+                // Verifica si lo que el cliente ha puesto es un int valido y si lo es retorna el numero
+                if (int.TryParse(Console.ReadLine(), out numero))
+                {
+                    return numero;
+>>>>>>> origin/main
                 }
 
-            } while (option != "0" && option is not null);
+                Console.WriteLine("Entrada no válida. Introduce un número entero.");
+            }
         }
 
+<<<<<<< HEAD
         public static void CreateTxtBestPrices() {
             BestPrices.CreateBuyList();
         }
 
         public static void ShowAllProducts() {
             BestPrices.ShowProductsList();
+=======
+        public async Task MostrarMenuAsync()
+        {
+            int option;
+
+            try
+            {
+                // pasamos el contexto de la base de datos 
+                using var context = new AppDbContext();
+
+                // creamos objetos de los servicios pasandole el contexto de la base de datos a cada uno 
+                var sm = new SupermarketService(context);
+                var p = new ProductService(context);
+                var hp = new HistoricalPriceService(context);
+
+                Console.WriteLine("\nBienvenido a SuperPrecioApp");
+                do
+                {
+                    Console.WriteLine("---------------------------");
+                    Console.WriteLine("Selecciona una opción:");
+                    Console.WriteLine("1. Listar productos");
+                    Console.WriteLine("2. Listar supermercados");
+                    Console.WriteLine("3. Consultar precios de un producto");
+                    Console.WriteLine("4. Consultar historial de un producto en un supermercado");
+                    Console.WriteLine("0. Salir del programa");
+                    Console.WriteLine("----------------------------------");
+
+                    option = LeerEntero("Introduce una opción:");
+
+                    // utilizamos un try catch en el menu por que existe algun caso que rompa el programa , 
+                    // ejemplo que lo que se ingrese no sea un numero o que el numero este fuera de rango 
+                    try
+                    {
+                        switch (option)
+                        {
+                            case 1:
+                                {
+                                    var productos = await p.ObtenerTodosAsync();
+
+                                    // verificacion previa de que la lista que devuelve tenga objetos
+                                    if (productos.Count == 0)
+                                    {
+                                        Console.WriteLine("No hay productos registrados.");
+                                        break;
+                                    }
+
+                                    foreach (var producto in productos)
+                                    {
+                                        Console.WriteLine($"{producto.Id} - {producto.Name}");
+                                    }
+
+                                    break;
+                                }
+
+                            case 2:
+                                {
+                                    var supermercados = await sm.ObtenerTodosAsync();
+
+                                    if (supermercados.Count == 0)
+                                    {
+                                        Console.WriteLine("No hay supermercados registrados.");
+                                        break;
+                                    }
+
+                                    foreach (var supermercado in supermercados)
+                                    {
+                                        Console.WriteLine($"{supermercado.Id} - {supermercado.Name}");
+                                    }
+
+                                    break;
+                                }
+
+                            case 3:
+                                {
+                                    int idProducto = LeerEntero("Introduce el ID del producto:");
+
+                                    if (idProducto <= 0)
+                                    {
+                                        Console.WriteLine("El ID debe ser mayor que cero.");
+                                        break;
+                                    }
+
+                                    var producto = await p.ObtenerPorIdAsync(idProducto);
+
+                                    if (producto == null)
+                                    {
+                                        Console.WriteLine("El producto no existe.");
+                                        break;
+                                    }
+
+                                    var historial = await hp.ObtenerHistorialDePreciosPorProductoAsync(idProducto);
+
+                                    if (historial.Count == 0)
+                                    {
+                                        Console.WriteLine("No hay historial de precios para este producto.");
+                                        break;
+                                    }
+
+                                    Console.WriteLine($"Producto: {producto.Name}");
+
+                                    foreach (var precio in historial)
+                                    {
+                                        Console.WriteLine($"{precio.Price} € - Supermercado ID: {precio.SupermarketId} - {precio.Date}");
+                                    }
+
+                                    break;
+                                }
+
+                            case 4:
+                                {
+                                    int idProducto = LeerEntero("Introduce el ID del producto:");
+
+                                    if (idProducto <= 0)
+                                    {
+                                        Console.WriteLine("El ID debe ser mayor que cero.");
+                                        break;
+                                    }
+
+                                    int idSupermarket = LeerEntero("Introduce el ID del supermercado:");
+
+                                    if (idSupermarket <= 0)
+                                    {
+                                        Console.WriteLine("El ID debe ser mayor que cero.");
+                                        break;
+                                    }
+
+                                    var producto = await p.ObtenerPorIdAsync(idProducto);
+
+                                    if (producto == null)
+                                    {
+                                        Console.WriteLine("El producto no existe.");
+                                        break;
+                                    }
+
+                                    var supermercado = await sm.ObtenerPorIdAsync(idSupermarket);
+
+                                    if (supermercado == null)
+                                    {
+                                        Console.WriteLine("El supermercado no existe.");
+                                        break;
+                                    }
+
+                                    var historial = await hp.ObtenerHistorialDePreciosPorProductoYSupermercadoAsync(
+                                        idProducto, idSupermarket);
+
+                                    if (historial.Count == 0)
+                                    {
+                                        Console.WriteLine("No hay historial de precios para esta combinación.");
+                                        break;
+                                    }
+
+                                    Console.WriteLine($"Producto: {producto.Name}");
+                                    Console.WriteLine($"Supermercado: {supermercado.Name}");
+
+                                    foreach (var precio in historial)
+                                    {
+                                        Console.WriteLine($"{precio.Price} € - {precio.Date}");
+                                    }
+
+                                    break;
+                                }
+
+
+                            case 0:
+                                {
+                                    Console.WriteLine("Saliendo del programa...");
+                                    break;
+                                }
+
+                            default:
+                                {
+                                    Console.WriteLine("Opción no válida.");
+                                    break;
+                                }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Se ha producido un error al ejecutar la operación.");
+                        Console.WriteLine($"Detalle: {ex.Message}");
+                    }
+
+                } while (option != 0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("No se ha podido iniciar o mantener la aplicación.");
+                Console.WriteLine($"Detalle: {ex.Message}");
+            }
+>>>>>>> origin/main
         }
     }
 }
