@@ -38,7 +38,4 @@ var menu = new MenuView();
 // se llama al metodo para mostra el menu 
 await menu.MostrarMenuAsync();
 
-new MenuView().ShowMenu();
-
-
 Console.WriteLine("¡Proceso finalizado con éxito!");

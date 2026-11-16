@@ -6,63 +6,27 @@ namespace SuperPrecioApp.Views
 {
     internal class MenuView
     {
-<<<<<<< HEAD
-        public void ShowMenu() {
-
-            Console.WriteLine("Bienvenido a SuperPrecioApp");
-            string? option;
-
-            do {
-                Console.WriteLine("----------------------------------------");
-                Console.WriteLine("Selecciona una opción:");
-                Console.WriteLine("1. Hacer la lista de la compra");
-                Console.WriteLine("2. Ver todos los productos");
-                Console.WriteLine("0. Salir del programa");
-                Console.WriteLine("----------------------------------------");
-=======
         public MenuView() { }
 
         // Método para leer números enteros sin provocar excepciones
         private static int LeerEntero(string mensaje)
         {
             int numero;
->>>>>>> origin/main
 
             while (true)
             {
                 Console.WriteLine(mensaje);
 
-<<<<<<< HEAD
-                if (option == "1") {
-                    CreateTxtBestPrices();
-                }
-
-                else if (option == "2") {
-                    ShowAllProducts();
-                }
-
-                else if (option != "0" && option is not null) {
-                    Console.WriteLine("Opción no válida.");
-=======
                 // Verifica si lo que el cliente ha puesto es un int valido y si lo es retorna el numero
                 if (int.TryParse(Console.ReadLine(), out numero))
                 {
                     return numero;
->>>>>>> origin/main
                 }
 
                 Console.WriteLine("Entrada no válida. Introduce un número entero.");
             }
         }
 
-<<<<<<< HEAD
-        public static void CreateTxtBestPrices() {
-            BestPrices.CreateBuyList();
-        }
-
-        public static void ShowAllProducts() {
-            BestPrices.ShowProductsList();
-=======
         public async Task MostrarMenuAsync()
         {
             int option;
@@ -251,7 +215,6 @@ namespace SuperPrecioApp.Views
                 Console.WriteLine("No se ha podido iniciar o mantener la aplicación.");
                 Console.WriteLine($"Detalle: {ex.Message}");
             }
->>>>>>> origin/main
         }
     }
 }
